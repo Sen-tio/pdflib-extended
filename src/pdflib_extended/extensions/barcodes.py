@@ -1,5 +1,5 @@
 from pdflib_extended.core.pdflib_base import PDFlibBase
-from .classes import Point
+from .classes import Point, Box
 from pylibdmtx.pylibdmtx import encode, Encoded
 from PIL import Image
 from io import BytesIO

@@ -1,8 +1,8 @@
-from core.pdflib_base import PDFlibBase
-from extensions.barcodes import omr, code_128, datamatrix
-from extensions.classes import Point, Box
-from extensions.shapes import rectangle
-from extensions.text import text_box
+from .core.pdflib_base import PDFlibBase
+from .extensions.barcodes import omr, code_128, datamatrix
+from .extensions.classes import Point, Box
+from .extensions.shapes import rectangle
+from .extensions.text import text_box
 
 
 class PDFlib(PDFlibBase):
@@ -36,8 +36,3 @@ class PDFlib(PDFlibBase):
 
     def fit_omr(self, eoc: bool = False, inserts: list[bool] = None) -> int:
         return omr(self, eoc, inserts)
-
-
-if __name__ == "__main__":
-    p = PDFlib()
-    print(isinstance(p, PDFlibBase))

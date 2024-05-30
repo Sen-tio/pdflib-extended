@@ -1,8 +1,9 @@
 from contextlib import AbstractContextManager
 from typing import Union, Optional, Self
+from pathlib import Path
 
-from pdflib_extended.core.pdflib_base import PDFlibBase
-from pdflib_extended.exceptions import InvalidDocumentHandle, InvalidPageHandle
+from ..core.pdflib_base import PDFlibBase
+from ..exceptions import InvalidDocumentHandle, InvalidPageHandle
 
 
 class Page(AbstractContextManager):

@@ -8,7 +8,7 @@ on:
 jobs:
   build-n-publish:
     name: Build and publish package
-    runs-on: ubuntu-latest, windows-latest
+    runs-on: ubuntu-latest, windows-latest, macos-latest
     steps:
     - uses: actions/checkout@main
     - name: Set up Python 3.12

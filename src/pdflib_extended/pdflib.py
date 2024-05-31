@@ -8,6 +8,8 @@ from .extensions.classes import Point, Box
 from .extensions.shapes import rectangle
 from .extensions.text import text_box
 
+BASE_DIR = Path(__file__).resolve().parent
+
 
 class PDFlib(PDFlibBase):
     def __init__(self, license_key: Optional[str] = None):
@@ -44,7 +46,7 @@ class PDFlib(PDFlibBase):
         self,
         text: str,
         box: Box,
-        font_name: str = "Arial",
+        font_name: str = "OpenSans-Regular",
         font_size: int = 12,
         tf_optlist: str = "",
         fit_optlist: str = "",

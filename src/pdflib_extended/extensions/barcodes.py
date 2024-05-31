@@ -89,7 +89,7 @@ def code_128(p: PDFlibBase, data: str, box: Box, font_size: int = 24) -> int:
     encoded_data = rf"Ì{data}{checksum_c}Î"
 
     p_result: Union[str, int] = text_box(
-        p, encoded_data, box, "Libre Barcode 128", font_size, "", ""
+        p, encoded_data, box, "LibreBarcode128-Regular", font_size, "", ""
     )
 
     if p_result != "_stop":

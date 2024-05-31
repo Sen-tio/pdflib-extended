@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 
 if sys.platform == "win32":
     from .binaries.windows.pdflib_py import *  # noqa: F403
@@ -10,12 +11,19 @@ else:
     raise OSError("Current OS is not supported")
 
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
 class PDFlibBase:
 
     def __init__(self):
         self.__p = PDF_new()
         if self.__p:
             PDF_set_option(self.__p, "objorient=true")
+            PDF_set_option(
+                self.__p,
+                f"searchpath={{{(BASE_DIR / 'resources' / 'fonts').as_posix()}}}",
+            )
 
     # it is recommended not to use __del__ as it is not guaranteed
     # when this will be executed (see Python Esential Reference Page 94).

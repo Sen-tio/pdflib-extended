@@ -1,4 +1,13 @@
-from .pdflib_py import *  # noqa: F403
+import sys
+
+if sys.platform == "win32":
+    from .binaries.windows.pdflib_py import *  # noqa: F403
+elif sys.platform == "darwin":
+    from .binaries.mac.pdflib_py import *
+elif sys.platform in ["linux", "linux2"]:
+    from .binaries.linux.pdflib_py import *
+else:
+    raise OSError("Current OS is not supported")
 
 
 class PDFlibBase:

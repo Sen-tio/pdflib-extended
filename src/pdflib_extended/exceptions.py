@@ -16,3 +16,7 @@ class EmptyNewDocumentException(Exception):
 
 class InvalidImageHandle(Exception):
     pass
+
+
+class InvalidTextflowHandle(Exception):
+    pass

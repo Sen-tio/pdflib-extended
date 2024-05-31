@@ -1,5 +1,4 @@
-from typing import Union
-
+from ..exceptions import InvalidTextflowHandle
 from pdflib_extended.core.pdflib_base import PDFlibBase
 from .classes import Box
 
@@ -12,7 +11,7 @@ def text_box(
     font_size: int,
     tf_optlist: str,
     fit_optlist: str,
-) -> Union[str, int]:
+) -> str:
     page_height: float = p.get_option("pageheight", "") / 72
 
     # Adjust box coordinates to accurately place on page
@@ -25,11 +24,10 @@ def text_box(
         f"encoding=unicode embedding {tf_optlist}",
     )
     if tf < 0:
-        # TODO: raise exception
-        return tf
+        raise InvalidTextflowHandle(p.get_errmsg())
 
     # Place object onto page
-    p_result: int = p.fit_textflow(
+    p_result: str = p.fit_textflow(
         tf,
         box.llx,
         box.lly,

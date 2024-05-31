@@ -1,6 +1,6 @@
-from ..exceptions import InvalidTextflowHandle
-from pdflib_extended.core.pdflib_base import PDFlibBase
+from ..core.pdflib_base import PDFlibBase
 from .classes import Box
+from ..exceptions import InvalidTextflowHandle
 
 
 def text_box(

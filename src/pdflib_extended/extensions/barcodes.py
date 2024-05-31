@@ -1,11 +1,12 @@
-from PIL import Image
 from io import BytesIO
-from pylibdmtx.pylibdmtx import encode, Encoded
 from typing import Union, Optional
 
-from pdflib_extended.core.pdflib_base import PDFlibBase
+from PIL import Image
+from pylibdmtx.pylibdmtx import encode, Encoded
+
 from .classes import Point, Box
 from .text import text_box
+from ..core.pdflib_base import PDFlibBase
 
 
 def datamatrix(p: PDFlibBase, data: str, point: Point, scale: float) -> int:

@@ -23,6 +23,7 @@ jobs:
       run: |
         brew update
         brew install libdmtx
+        brew list
     - name: Install Linux specific dependencies
       if: runner.os == 'Linux'
       run: |

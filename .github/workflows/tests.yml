@@ -28,6 +28,20 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install libdmtx0b
+    - name: Linux install Google Font Libre Barcode 128
+      if: runner.os == 'Linux'
+      run: |
+        wget -O Libre_Barcode_128.zip https://fonts.google.com/download?family=Libre%20Barcode%20128
+        unzip -d libre_barcode_128/ Libre_Barcode_128.zip
+        mv libre_barcode_128 /usr/share/fonts/
+        fc-cache -fv
+    - name: Linux install Google Font Open Sans
+      if: runner.os == 'Linux'
+      run: |
+        wget -O Open_Sans.zip https://fonts.google.com/download?family=Open%20Sans
+        unzip -d open_sans/ Open_Sans.zip
+        mv open_sans /usr/share/fonts/
+        fc-cache -fv
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip

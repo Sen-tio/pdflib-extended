@@ -16,4 +16,4 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           PUBLISH_REGISTRY_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
           BRANCH: main
-          PACKAGE_DIRECTORY: "./src/pdflib_extended"
+          PACKAGE_DIRECTORY: "./src/pdflib_extended/"

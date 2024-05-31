@@ -1,6 +1,7 @@
 from contextlib import AbstractContextManager
 from pathlib import Path
-from typing import Union, Optional, Self, ContextManager
+from typing import Union, Optional, ContextManager
+from typing_extensions import Self
 
 from ..core.pdflib_base import PDFlibBase
 from ..exceptions import (

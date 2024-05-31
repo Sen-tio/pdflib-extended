@@ -1,26 +1,17 @@
-name: Publish
+name: Build and publish python package
 
 on:
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
-  build-n-publish:
-    name: Build and publish package
+  publish-service-client-package:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.12'
-    - name: Install poetry
-      run: python -m pip install poetry
-    - name: Install dependencies
-      run: poetry install
-    - name: Build package
-      run: poetry build
-    - name: Publish package to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      - name: Publish PyPi package
+        uses: code-specialist/pypi-poetry-publish@v1
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          PUBLISH_REGISTRY_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}

@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "pdflib-extended"
 version = "2024.05.31.1"
-description = ""
+description = "Extension of the PDFlib library."
 authors = ["RichardS <richards@eoshost.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.9"
 pylibdmtx = "^0.1.10"
 pillow = "^10.3.0"
 

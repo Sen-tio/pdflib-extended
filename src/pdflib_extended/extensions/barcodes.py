@@ -1,8 +1,11 @@
+from io import BytesIO
+from typing import Union, Optional
+
+from PIL import Image
+from pylibdmtx.pylibdmtx import encode, Encoded
+
 from pdflib_extended.core.pdflib_base import PDFlibBase
 from .classes import Point, Box
-from pylibdmtx.pylibdmtx import encode, Encoded
-from PIL import Image
-from io import BytesIO
 from .text import text_box
 
 
@@ -35,7 +38,7 @@ def datamatrix(p: PDFlibBase, data: str, point: Point, scale: float) -> int:
     image_border: float = 0.14
     border_offset: float = image_border * scale
 
-    page_height: float = self.get_option("pageheight", "") / 72
+    page_height: float = p.get_option("pageheight", "") / 72
 
     point = Point(
         point.x - border_offset, page_height - border_offset - point.y
@@ -46,19 +49,17 @@ def datamatrix(p: PDFlibBase, data: str, point: Point, scale: float) -> int:
     if p_image < 0:
         return p_image
 
-    p_result = p.fit_image(p_image, point.x, point.y, f"scale={scale}")
-    if p_result < 0:
-        return p_result
-
+    p.fit_image(p_image, point.x, point.y, f"scale={scale}")
     p.close_image(p_image)
 
     return 0
 
 
-def code_128(p: PDFlibBase, data: str, box: Box, font_size: int) -> int:
+def code_128(p: PDFlibBase, data: str, box: Box, font_size: int = 24) -> int:
     """
     Reference: https://www.barcodefaq.com/1d/code-128/
-    Function created using character set B and requires Google Font "Libre Barcode 128".
+    Requires Google Font 'Libre Barcode 128': https://fonts.google.com/specimen/Libre+Barcode+128
+    Function created using character set B.
 
     :param p:
     :param data:
@@ -86,16 +87,18 @@ def code_128(p: PDFlibBase, data: str, box: Box, font_size: int) -> int:
     checksum_c = chr(check_digit_ascii)
     encoded_data = rf"Ì{data}{checksum_c}Î"
 
-    p_result: int = text_box(
+    p_result: Union[str, int] = text_box(
         p, encoded_data, box, "Libre Barcode 128", font_size, "", ""
     )
-    if p_result < 0:
-        return p_result
+
+    if p_result != "_stop":
+        # TODO: raise a box not big enough error, or not all data placed
+        return -1
 
     return 0
 
 
-def omr(p: PDFlibBase, eoc: bool, inserts: list[bool] = None) -> int:
+def omr(p: PDFlibBase, eoc: bool, inserts: Optional[list[bool]] = None) -> int:
     """
     Draws Optical Recognition Marks in the top left of page for inserter machines.
 
@@ -137,6 +140,5 @@ def omr(p: PDFlibBase, eoc: bool, inserts: list[bool] = None) -> int:
             point.y += line_height  # Shift the y if it is not present
 
     p.stroke()
-    p.restore()
 
     return 0

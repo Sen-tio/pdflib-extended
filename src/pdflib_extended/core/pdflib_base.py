@@ -1,10 +1,9 @@
-from pdflib_py import *
+from .pdflib_py import *
 
 
-class PDFlibBase(object):
+class PDFlibBase:
 
     def __init__(self):
-        self.__p = None
         self.__p = PDF_new()
         if self.__p:
             PDF_set_option(self.__p, "objorient=true")

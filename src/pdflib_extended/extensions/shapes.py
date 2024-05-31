@@ -3,7 +3,7 @@ from .classes import Box
 
 
 def rectangle(p: PDFlibBase, box: Box, c: float, m: float, y: float, k: float) -> int:
-    page_height: float = self.get_option("pageheight", "") / 72
+    page_height: float = p.get_option("pageheight", "") / 72
 
     # Adjust box to be drawn correctly
     offset_x: float = box.urx - box.llx
@@ -14,8 +14,8 @@ def rectangle(p: PDFlibBase, box: Box, c: float, m: float, y: float, k: float) -
     p.save()
     p.set_graphics_option(f"fillcolor={{cmyk {c} {m} {y} {k}}}")
 
-    self.rect(box.llx, box.lly, box.urx, box.ury)
-    self.fill()
+    p.rect(box.llx, box.lly, box.urx, box.ury)
+    p.fill()
 
     p.restore()
 

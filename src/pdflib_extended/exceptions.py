@@ -4,3 +4,15 @@ class InvalidDocumentHandle(Exception):
 
 class InvalidPageHandle(Exception):
     pass
+
+
+class DocumentWriteException(Exception):
+    pass
+
+
+class EmptyNewDocumentException(Exception):
+    pass
+
+
+class InvalidImageHandle(Exception):
+    pass

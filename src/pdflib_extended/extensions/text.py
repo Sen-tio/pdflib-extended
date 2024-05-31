@@ -1,3 +1,5 @@
+from typing import Union
+
 from pdflib_extended.core.pdflib_base import PDFlibBase
 from .classes import Box
 
@@ -10,21 +12,20 @@ def text_box(
     font_size: int,
     tf_optlist: str,
     fit_optlist: str,
-) -> int:
+) -> Union[str, int]:
     page_height: float = p.get_option("pageheight", "") / 72
 
     # Adjust box coordinates to accurately place on page
-    box: Box = Box(
-        box.llx, page_height - box.lly, box.urx, page_height - box.ury
-    ).as_pt()
+    box = Box(box.llx, page_height - box.lly, box.urx, page_height - box.ury).as_pt()
 
-    # Create texflow object
+    # Create textflow object
     tf: int = p.create_textflow(
         text,
         f"fontname={{{font_name}}} fontsize={font_size} "
         f"encoding=unicode embedding {tf_optlist}",
     )
     if tf < 0:
+        # TODO: raise exception
         return tf
 
     # Place object onto page

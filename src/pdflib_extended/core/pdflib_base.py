@@ -1,4 +1,4 @@
-from .pdflib_py import *
+from .pdflib_py import *  # noqa: F403
 
 
 class PDFlibBase:

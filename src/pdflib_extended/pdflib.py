@@ -1,12 +1,12 @@
 from pathlib import Path
 from typing import ContextManager, Union, Optional
 
+from pdflib_extended.extensions.contexts import Document, NewDocument, Image
 from .core.pdflib_base import PDFlibBase
 from .extensions.barcodes import omr, code_128, datamatrix
 from .extensions.classes import Point, Box
 from .extensions.shapes import rectangle
 from .extensions.text import text_box
-from .utils.contexts import Document, NewDocument, Image
 
 
 class PDFlib(PDFlibBase):

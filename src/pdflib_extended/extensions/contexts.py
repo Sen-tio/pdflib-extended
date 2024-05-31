@@ -1,9 +1,9 @@
 from contextlib import AbstractContextManager
-from typing import Union, Optional, Self, ContextManager
 from pathlib import Path
+from typing import Union, Optional, Self, ContextManager
 
-from ..core.pdflib_base import PDFlibBase
-from ..exceptions import (
+from pdflib_extended.core.pdflib_base import PDFlibBase
+from pdflib_extended.exceptions import (
     InvalidDocumentHandle,
     InvalidPageHandle,
     DocumentWriteException,

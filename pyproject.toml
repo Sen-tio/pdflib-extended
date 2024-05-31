@@ -9,15 +9,16 @@ readme = "README.md"
 python = "^3.12"
 pylibdmtx = "^0.1.10"
 pillow = "^10.3.0"
-mypy = "^1.10.0"
-flake8 = "^7.0.0"
-tox = "^4.15.0"
 
 [tool.poetry.dev-dependencies]
 black = "^24.4.2"
 setuptools = "^70.0.0"
 pytest = "^8.2.1"
 pytest-datadir = "^1.5.0"
+mypy = "^1.10.0"
+flake8 = "^7.0.0"
+tox = "^4.15.0"
+pytest-cov = "^5.0.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -41,3 +42,4 @@ warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
 no_implicit_reexport = true
+

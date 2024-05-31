@@ -1,8 +1,7 @@
-from io import BytesIO
-from typing import Union, Optional
-
 from PIL import Image
+from io import BytesIO
 from pylibdmtx.pylibdmtx import encode, Encoded
+from typing import Union, Optional
 
 from pdflib_extended.core.pdflib_base import PDFlibBase
 from .classes import Point, Box
@@ -22,7 +21,8 @@ def datamatrix(p: PDFlibBase, data: str, point: Point, scale: float) -> int:
     data_bytes: bytes = data.encode("utf-8")
     encoded_data: Encoded = encode(data_bytes)
 
-    # Save encoded data and convert to a memory buffer to be read into the pvf system
+    # Save encoded data and convert to a memory buffer to be
+    # read into the pvf system
     image = Image.frombytes(
         "RGB", (encoded_data.width, encoded_data.height), encoded_data.pixels
     )
@@ -58,7 +58,8 @@ def datamatrix(p: PDFlibBase, data: str, point: Point, scale: float) -> int:
 def code_128(p: PDFlibBase, data: str, box: Box, font_size: int = 24) -> int:
     """
     Reference: https://www.barcodefaq.com/1d/code-128/
-    Requires Google Font 'Libre Barcode 128': https://fonts.google.com/specimen/Libre+Barcode+128
+    Requires Google Font 'Libre Barcode 128':
+        https://fonts.google.com/specimen/Libre+Barcode+128
     Function created using character set B.
 
     :param p:
@@ -100,7 +101,8 @@ def code_128(p: PDFlibBase, data: str, box: Box, font_size: int = 24) -> int:
 
 def omr(p: PDFlibBase, eoc: bool, inserts: Optional[list[bool]] = None) -> int:
     """
-    Draws Optical Recognition Marks in the top left of page for inserter machines.
+    Draws Optical Recognition Marks in the top left of page
+    for inserter machines.
 
     :param p: pdflib object reference
     :param eoc: end of collation for current piece

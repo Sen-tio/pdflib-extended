@@ -21,9 +21,8 @@ jobs:
     - name: Install macOS specific dependencies
       if: runner.os == 'macOS'
       run: |
-        brew update
-        brew install libdmtx
-        export DYLD_LIBRARY_PATH="/usr/local/Cellar/libdmtx/0.7.7/lib:$DYLD_LIBRARY_PATH"
+        brew update --preinstall
+        env HOMEBREW_NO_AUTO_UPDATE=1 brew install libdmtx
     - name: Install Linux specific dependencies
       if: runner.os == 'Linux'
       run: |

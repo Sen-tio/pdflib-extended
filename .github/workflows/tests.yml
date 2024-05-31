@@ -23,7 +23,7 @@ jobs:
       run: |
         brew update
         brew install libdmtx
-        brew list
+        export DYLD_LIBRARY_PATH="/usr/local/Cellar/libdmtx/0.7.7/lib:$DYLD_LIBRARY_PATH"
     - name: Install Linux specific dependencies
       if: runner.os == 'Linux'
       run: |

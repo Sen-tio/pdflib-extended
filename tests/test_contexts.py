@@ -1,4 +1,6 @@
 import pytest
+
+from pdflib_extended.extensions.blocks import Block
 from pdflib_extended.pdflib import PDFlib
 from pathlib import Path
 
@@ -40,6 +42,8 @@ def test_page_context(new_document_scoped_pdflib_object, shared_datadir):
                 assert page.handle >= 0
                 assert page.width == 8.5 * 72
                 assert page.height == 11 * 72
+                assert page.block_count == 2
+                assert [isinstance(b, Block) for b in page.blocks]
 
 
 def test_new_document_context(tmp_path):

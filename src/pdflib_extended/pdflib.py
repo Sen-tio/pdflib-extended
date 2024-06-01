@@ -34,7 +34,7 @@ class PDFlib(PDFlibBase):
         image_type: Optional[str] = "auto",
         optlist: Optional[str] = "",
     ) -> ContextManager[Image]:
-        return Image(self, file_path, optlist, image_type)
+        return Image(self, file_path, image_type, optlist)
 
     def fit_datamatrix(self, data: str, point: Point, scale: float = 0.35) -> int:
         return datamatrix(self, data, point, scale)

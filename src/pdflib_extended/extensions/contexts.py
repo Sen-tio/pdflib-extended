@@ -1,9 +1,10 @@
 from contextlib import AbstractContextManager
 from pathlib import Path
-from typing import Union, Optional, ContextManager
+from typing import Union, Optional, ContextManager, TYPE_CHECKING
 from typing_extensions import Self
+from .blocks import Block
+from ..core.pdflib_base import PDFlibBase  # noqa: F401
 
-from ..core.pdflib_base import PDFlibBase
 from ..exceptions import (
     InvalidDocumentHandle,
     InvalidPageHandle,
@@ -12,11 +13,14 @@ from ..exceptions import (
     InvalidImageHandle,
 )
 
+if TYPE_CHECKING:
+    from ..pdflib import PDFlib
+
 
 class Page(AbstractContextManager["Page"]):
     def __init__(
         self,
-        p: PDFlibBase,
+        p: "PDFlib",
         document_handle: int,
         page_number: int,
         optlist: Optional[str] = "",
@@ -42,6 +46,18 @@ class Page(AbstractContextManager["Page"]):
         self.p.fit_pdi_page(self.handle, x, y, optlist)
 
     @property
+    def block_count(self) -> int:
+        return int(
+            self.p.pcos_get_number(
+                self.document_handle, f"length:pages[{self.page_number - 1}]/blocks"
+            )
+        )
+
+    @property
+    def blocks(self) -> list[Block]:
+        return [Block.create_block(self.p, self, i) for i in range(self.block_count)]
+
+    @property
     def width(self) -> float:
         width: float = self.p.pcos_get_number(
             self.document_handle, f"pages[{self.page_number - 1}]/width"
@@ -58,7 +74,7 @@ class Page(AbstractContextManager["Page"]):
 
 class Document(AbstractContextManager["Document"]):
     def __init__(
-        self, p: PDFlibBase, file_path: Union[str, Path], optlist: Optional[str] = ""
+        self, p: "PDFlib", file_path: Union[str, Path], optlist: Optional[str] = ""
     ) -> None:
         self.p = p
         self.file_path = Path(file_path)
@@ -88,7 +104,7 @@ class Document(AbstractContextManager["Document"]):
 
 class NewPage(AbstractContextManager["NewPage"]):
     def __init__(
-        self, p: PDFlibBase, width: float, height: float, optlist: Optional[str] = ""
+        self, p: "PDFlib", width: float, height: float, optlist: Optional[str] = ""
     ) -> None:
         self.p = p
         self.width = width
@@ -105,7 +121,7 @@ class NewPage(AbstractContextManager["NewPage"]):
 
 class NewDocument(AbstractContextManager["NewDocument"]):
     def __init__(
-        self, p: PDFlibBase, file_path: Union[str, Path], optlist: Optional[str] = ""
+        self, p: "PDFlib", file_path: Union[str, Path], optlist: Optional[str] = ""
     ) -> None:
         self.p = p
         self.file_path = Path(file_path)
@@ -126,7 +142,10 @@ class NewDocument(AbstractContextManager["NewDocument"]):
         self.p.end_document("")
 
     def start_page(
-        self, width: float, height: float, optlist: Optional[str] = ""
+        self,
+        width: float = 612.0,
+        height: float = 792.0,
+        optlist: Optional[str] = "",
     ) -> ContextManager[NewPage]:
         self.page_count += 1
         return NewPage(self.p, width, height, optlist)
@@ -135,7 +154,7 @@ class NewDocument(AbstractContextManager["NewDocument"]):
 class Image(AbstractContextManager["Image"]):
     def __init__(
         self,
-        p: PDFlibBase,
+        p: "PDFlib",
         file_path: Union[str, Path],
         image_type: Optional[str] = "auto",
         optlist: Optional[str] = "",

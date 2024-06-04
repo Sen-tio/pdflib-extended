@@ -12,8 +12,8 @@ BASE_DIR = Path(__file__).resolve().parent
 
 
 class PDFlib(PDFlibBase):
-    def __init__(self, license_key: Optional[str] = None):
-        super().__init__()
+    def __init__(self, license_key: Optional[str] = None, version: int = 10):
+        super().__init__(version=version)
 
         if license_key:
             self.set_option(f"license={license_key}")

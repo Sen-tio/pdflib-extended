@@ -1,20 +1,50 @@
 import sys
+import importlib
 from pathlib import Path
-
-if sys.platform == "win32":
-    from .binaries.windows.pdflib_py import *  # noqa: F403
-elif sys.platform in ["linux", "linux2"]:
-    from .binaries.linux.pdflib_py import *  # noqa: F403
-else:
-    raise OSError("Current OS is not supported")
+from typing import TYPE_CHECKING
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+if TYPE_CHECKING:
+    if sys.platform == "win32":
+        from .binaries._10.windows.pdflib_py import *  # noqa: F403
+    elif sys.platform in ["linux", "linux2"]:
+        from .binaries._10.linux.pdflib_py import *  # noqa: F403
+    else:
+        raise OSError("Current OS is not supported")
+
+
+class VersionNotSupported(Exception):
+    pass
+
+
+def load_pdflib_py_binary(version: int) -> None:
+    if sys.platform == "win32":
+        platform_name = "windows"
+    elif sys.platform in ["linux", "linux2"]:
+        platform_name = "linux"
+    else:
+        raise OSError("Current OS is not supported")
+
+    if version == 9:
+        version_name = "_931"
+    elif version == 10:
+        version_name = "_10"
+    else:
+        raise VersionNotSupported(f"Version {version} is not supported")
+
+    module_name = f".binaries.{version_name}.{platform_name}.pdflib_py"
+    module = importlib.import_module(module_name, package=__package__)
+    globals().update(
+        {k: getattr(module, k) for k in dir(module) if not k.startswith("_")}
+    )
+
 
 class PDFlibBase:
 
-    def __init__(self):
+    def __init__(self, version: int = 10) -> None:
+        load_pdflib_py_binary(version)
         self.__p = PDF_new()
         if self.__p:
             PDF_set_option(self.__p, "objorient=true")
@@ -28,8 +58,11 @@ class PDFlibBase:
     # so we also implement a delete method and invalidate self.__p
     # whenever this will be called.
     def __del__(self):
-        if self.__p:
-            PDF_delete(self.__p)
+        if hasattr(self, "__p") and self.__p:
+            try:
+                PDF_delete(self.__p)
+            except Exception as e:
+                print(f"Failed to delete PDFlib: {e}")
 
     def delete(self):
         if self.__p:

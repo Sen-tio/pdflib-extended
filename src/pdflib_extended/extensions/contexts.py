@@ -4,6 +4,7 @@ from typing import Union, Optional, ContextManager, TYPE_CHECKING
 from typing_extensions import Self
 from .blocks import Block
 from ..core.pdflib_base import PDFlibBase  # noqa: F401
+from ..core.tetlib_base import TETlibBase
 
 from ..exceptions import (
     InvalidDocumentHandle,
@@ -11,22 +12,28 @@ from ..exceptions import (
     DocumentWriteException,
     EmptyNewDocumentException,
     InvalidImageHandle,
+    TETNotLoaded,
 )
 
 if TYPE_CHECKING:
     from ..pdflib import PDFlib
+    from .. import Box
 
 
 class Page(AbstractContextManager["Page"]):
     def __init__(
         self,
         p: "PDFlib",
+        t: Union["TETlibBase", None],
         document_handle: int,
         page_number: int,
         optlist: Optional[str] = "",
+        t_document_handle: Optional[int] = None,
     ) -> None:
         self.p = p
+        self.t = t
         self.document_handle = document_handle
+        self.t_document_handle = t_document_handle
         self.page_number = page_number
         self.optlist = optlist
 
@@ -71,14 +78,54 @@ class Page(AbstractContextManager["Page"]):
         )
         return height
 
+    def get_text(self, box: Optional["Box"] = None) -> str:
+        if self.t is None:
+            raise TETNotLoaded(
+                "TET has not been loaded, pass the load_tet flag to the "
+                "PDFlib object to explicity load TET."
+            )
+
+        optlist: str = "granularity=page"
+
+        if box is not None:
+            # Convert box inches to point and subtract page height to flip coordinates
+            page_height = self.height / 72
+            box: Box = Box(
+                box.llx, page_height - box.lly, box.urx, page_height - box.ury
+            ).as_pt()
+
+            optlist: str = "granularity=page includebox={{%s %s %s %s}}" % (
+                box.llx,
+                box.lly,
+                box.urx,
+                box.ury,
+            )
+
+        t_handle: int = self.t.open_page(
+            self.t_document_handle, self.page_number, optlist
+        )
+        if t_handle < 0:
+            raise InvalidPageHandle(self.t.get_errmsg())
+
+        text: str = self.t.get_text(t_handle)
+
+        self.t.close_page(t_handle)
+        return text
+
 
 class Document(AbstractContextManager["Document"]):
     def __init__(
-        self, p: "PDFlib", file_path: Union[str, Path], optlist: Optional[str] = ""
+        self,
+        p: "PDFlib",
+        t: Union["TETlibBase", None],
+        file_path: Union[str, Path],
+        optlist: Optional[str] = "",
     ) -> None:
         self.p = p
+        self.t = t
         self.file_path = Path(file_path)
         self.optlist = optlist
+        self.t_handle = None
 
     def __enter__(self) -> Self:
         self.handle: int = self.p.open_pdi_document(
@@ -87,15 +134,25 @@ class Document(AbstractContextManager["Document"]):
         if self.handle < 0:
             raise InvalidDocumentHandle(self.p.get_errmsg())
 
+        if self.t is not None:
+            self.t_handle: int = self.t.open_document(
+                self.file_path.as_posix(), self.optlist
+            )
+            if self.t_handle < 0:
+                raise InvalidImageHandle(self.t.get_errmsg())
+
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        if self.t is not None:
+            self.t.close_document(self.t_handle)
+
         self.p.close_pdi_document(self.handle)
 
     def open_page(
         self, page_number: int, optlist: Optional[str] = ""
     ) -> ContextManager[Page]:
-        return Page(self.p, self.handle, page_number, optlist)
+        return Page(self.p, self.t, self.handle, page_number, optlist, self.t_handle)
 
     @property
     def page_count(self) -> int:

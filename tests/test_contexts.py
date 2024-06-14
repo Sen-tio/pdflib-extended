@@ -10,7 +10,7 @@ from pdflib_extended.extensions.contexts import NewDocument, Image, NewPage
 
 @pytest.fixture(scope="function")
 def new_document_scoped_pdflib_object(tmp_path) -> PDFlib:
-    p = PDFlib()
+    p = PDFlib(load_tet=True)
     tmp_file = tmp_path / "tmp.pdf"
 
     with p.start_document(tmp_file) as new_document:
@@ -39,6 +39,8 @@ def test_page_context(new_document_scoped_pdflib_object, shared_datadir):
         with NewPage(p, 8.5 * 72, 11 * 72) as _:
             with document.open_page(page_number=1) as page:
                 page.fit_page(0, 0)
+                page_text: str = page.get_text()
+                assert page_text == "This is a Sample PDF file"
                 assert page.handle >= 0
                 assert page.width == 8.5 * 72
                 assert page.height == 11 * 72

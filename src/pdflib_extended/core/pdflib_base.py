@@ -8,9 +8,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 if TYPE_CHECKING:
     if sys.platform == "win32":
-        from .binaries._10.windows.pdflib_py import *  # noqa: F403
+        from .binaries.pdflib._10.windows.pdflib_py import *  # noqa: F403
     elif sys.platform in ["linux", "linux2"]:
-        from .binaries._10.linux.pdflib_py import *  # noqa: F403
+        from .binaries.pdflib._10.linux.pdflib_py import *  # noqa: F403
     else:
         raise OSError("Current OS is not supported")
 
@@ -34,7 +34,7 @@ def load_pdflib_py_binary(version: int) -> None:
     else:
         raise VersionNotSupported(f"Version {version} is not supported")
 
-    module_name = f".binaries.{version_name}.{platform_name}.pdflib_py"
+    module_name = f".binaries.pdflib.{version_name}.{platform_name}.pdflib_py"
     module = importlib.import_module(module_name, package=__package__)
     globals().update(
         {k: getattr(module, k) for k in dir(module) if not k.startswith("_")}

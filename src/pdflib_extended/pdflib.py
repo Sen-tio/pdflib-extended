@@ -1,17 +1,13 @@
-import sys
 from pathlib import Path
 from typing import ContextManager, Union, Optional
 
 from .core.pdflib_base import PDFlibBase
-from .core.tetlib_base import TETlibBase
 from .extensions.barcodes import omr, code_128, datamatrix
 from .extensions.classes import Point, Box
 from .extensions.contexts import Document, NewDocument, Image
 from .extensions.shapes import rectangle
 from .extensions.text import text_box
 
-if sys.platform == "win32":
-    from .core.tetlib_base import TETLibCOMBase
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -21,19 +17,8 @@ class PDFlib(PDFlibBase):
         self,
         license_key: Optional[str] = None,
         version: int = 10,
-        load_tet: bool = False,
-        load_tet_com: bool = False,
     ):
         super().__init__(version=version)
-        self.t: Union[TETlibBase, "TETLibCOMBase", None] = None
-
-        if load_tet or load_tet_com:
-            if sys.platform == "win32" and load_tet_com:
-                self.t = TETLibCOMBase()
-            elif sys.platform != "win32" and load_tet_com:
-                raise OSError("TETlib COM object only available on windows platform")
-            else:
-                self.t = TETlibBase()
 
         if license_key:
             self.set_option(f"license={license_key}")
@@ -46,7 +31,7 @@ class PDFlib(PDFlibBase):
     def open_document(
         self, file_path: Union[str, Path], optlist: Optional[str] = ""
     ) -> ContextManager[Document]:
-        return Document(self, self.t, file_path, optlist)
+        return Document(self, file_path, optlist)
 
     def read_image(
         self,

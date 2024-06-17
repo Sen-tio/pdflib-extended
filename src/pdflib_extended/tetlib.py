@@ -16,7 +16,7 @@ class TETLib(TETLibBase):
 
             DynamicClass = type("DynamicClass", (TETLibCOMBase,), {})
             instance: type = super(TETLib, cls).__new__(DynamicClass)
-            DynamicClass.__init__(instance)
+            DynamicClass.__init__(instance)  # type: ignore[misc]
             return instance
 
         return super().__new__(cls)

@@ -57,7 +57,6 @@ class TETLibBase(object):
     IF_JBIG2 = 50
 
     def __init__(self):
-        self.__p = None
         self.__p = TET_new()
         # don't set unicaplang, would be incompatible to TET 4.0
         # without unicaplang get_text() can return UTF8 by default
@@ -76,7 +75,6 @@ class TETLibBase(object):
     def delete(self):
         if self.__p:
             TET_delete(self.__p)
-        self.__p = None
 
     def close_document(self, doc):
         TET_close_document(self.__p, doc)

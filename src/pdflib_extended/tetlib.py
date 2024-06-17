@@ -1,7 +1,9 @@
 import sys
-from typing import Optional
+from typing import Optional, ContextManager, Union
 
+from .extensions.contexts import TETDocument
 from .core.tetlib_base import TETLibBase
+from pathlib import Path
 
 
 class TETLib(TETLibBase):
@@ -13,7 +15,7 @@ class TETLib(TETLibBase):
             from .core.tetlib_base import TETLibCOMBase
 
             DynamicClass = type("DynamicClass", (TETLibCOMBase,), {})
-            instance = super(TETLib, cls).__new__(DynamicClass)
+            instance: type = super(TETLib, cls).__new__(DynamicClass)
             DynamicClass.__init__(instance)
             return instance
 
@@ -26,3 +28,8 @@ class TETLib(TETLibBase):
 
         if license_key:
             self.set_option(f"license={license_key}")
+
+    def open_document_ctx(
+        self, file_path: Union[Path, str], optlist: Optional[str] = ""
+    ) -> ContextManager[TETDocument]:
+        return TETDocument(self, file_path, optlist=optlist)

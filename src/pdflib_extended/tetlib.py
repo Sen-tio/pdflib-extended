@@ -12,7 +12,7 @@ class TETLib(TETLibBase):
             if sys.platform != "win32":
                 raise RuntimeError("COM objects can only be loaded on Windows")
 
-            from .core.tetlib_base import TETLibCOMBase
+            from .core.tetlib_base import TETLibCOMBase  # type: ignore
 
             DynamicClass = type("DynamicClass", (TETLibCOMBase,), {})
             instance: type = super(TETLib, cls).__new__(DynamicClass)

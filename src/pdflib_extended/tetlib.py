@@ -14,9 +14,9 @@ class TETLib(TETLibBase):
 
             from .core.tetlib_base import TETLibCOMBase  # type: ignore
 
-            DynamicClass = type("DynamicClass", (TETLibCOMBase,), {})
-            instance: type = super(TETLib, cls).__new__(DynamicClass)
-            DynamicClass.__init__(instance)  # type: ignore[misc]
+            cls.__bases__ = (TETLibCOMBase,)
+            instance = super().__new__(cls)
+            instance.__init__(*args, **kwargs)  # type: ignore[misc]
             return instance
 
         return super().__new__(cls)

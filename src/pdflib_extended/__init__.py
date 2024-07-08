@@ -2,5 +2,5 @@ from .pdflib import PDFlib
 from .tetlib import TETLib
 from .extensions.classes import Box, Point
 
-__version__ = "2024.06.17"
+__version__ = "2024.07.08"
 __all__ = ["PDFlib", "TETLib", "Box", "Point"]

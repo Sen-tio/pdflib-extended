@@ -18,7 +18,6 @@ from ..exceptions import (
 if TYPE_CHECKING:
     from ..tetlib import TETLib
     from ..pdflib import PDFlib
-    from .classes import Box
 
 
 class Page(AbstractContextManager["Page"]):

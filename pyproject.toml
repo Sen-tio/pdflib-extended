@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pdflib-extended"
-version = "2024.06.17"
+version = "2024.07.08"
 description = "Extension of the PDFlib library."
 authors = ["RichardS <richards@eoshost.com>"]
 readme = "README.md"

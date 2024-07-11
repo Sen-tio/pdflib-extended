@@ -5,6 +5,7 @@ from typing_extensions import Self
 from .blocks import Block
 from ..core.pdflib_base import PDFlibBase  # noqa: F401
 from ..core.tetlib_base import TETLibBase  # noqa: F401
+from .classes import Box
 
 from ..exceptions import (
     InvalidDocumentHandle,
@@ -249,7 +250,7 @@ class TETPage(AbstractContextManager["TETPage"]):
         return text
 
     def _open_page_with_box(self, box: "Box") -> int:
-        page_height: float = self.height
+        page_height: float = self.height / 72
 
         # Convert from inches to point and subtract page height to flip coordinates
         box = Box(

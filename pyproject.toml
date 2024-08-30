@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pdflib-extended"
-version = "2024.07.11"
+version = "2024.08.30"
 description = "Extension of the PDFlib library."
 authors = ["RichardS <richards@eoshost.com>"]
 readme = "README.md"
@@ -10,6 +10,7 @@ python = "^3.9"
 pylibdmtx = "^0.1.10"
 pillow = "^10.3.0"
 pywin32 = { version = "*", markers = "sys_platform == 'win32'" }
+qrcode = "^7.4.2"
 
 [tool.poetry.dev-dependencies]
 black = "^24.4.2"

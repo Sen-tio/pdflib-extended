@@ -18,3 +18,9 @@ def test_omr(new_page_scoped_pdflib_object: PDFlib) -> None:
     p: PDFlib = new_page_scoped_pdflib_object
     p_result: int = p.fit_omr(eoc=True, inserts=[False, True, True])
     assert p_result >= 0
+
+
+def test_qr_code(new_page_scoped_pdflib_object: PDFlib) -> None:
+    p: PDFlib = new_page_scoped_pdflib_object
+    p_result: int = p.fit_qr_code("123123", Point(1, 1), size=2)
+    assert p_result >= 0

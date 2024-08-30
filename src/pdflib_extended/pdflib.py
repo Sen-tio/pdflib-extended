@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import ContextManager, Union, Optional
 
 from .core.pdflib_base import PDFlibBase
-from .extensions.barcodes import omr, code_128, datamatrix
+from .extensions.barcodes import omr, code_128, datamatrix, qr_code
 from .extensions.classes import Point, Box
 from .extensions.contexts import Document, NewDocument, Image
 from .extensions.shapes import rectangle
@@ -65,3 +65,13 @@ class PDFlib(PDFlibBase):
 
     def fit_omr(self, eoc: bool = False, inserts: Optional[list[bool]] = None) -> int:
         return omr(self, eoc, inserts)
+
+    def fit_qr_code(
+        self,
+        data: str,
+        point: Point,
+        size: int = 1,
+        box_size: int = 1,
+        border: int = 0,
+    ) -> int:
+        return qr_code(self, data, point, size, box_size, border)

@@ -1,6 +1,7 @@
 from io import BytesIO
 from typing import Union, Optional
 
+import qrcode
 from PIL import Image
 from pylibdmtx.pylibdmtx import encode, Encoded
 
@@ -143,5 +144,49 @@ def omr(p: PDFlibBase, eoc: bool, inserts: Optional[list[bool]] = None) -> int:
             point.y += line_height  # Shift the y if it is not present
 
     p.stroke()
+
+    return 0
+
+
+def qr_code(
+    p: PDFlibBase,
+    data: str,
+    point: Point,
+    size: int,
+    box_size: int,
+    border: int,
+):
+    qr = qrcode.main.QRCode(
+        version=size,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=box_size,
+        border=border,
+    )
+
+    qr.add_data(data)
+    qr.make()
+
+    image = qr.make_image(fill_color="black", back_color="white")
+
+    # Save encoded data and convert to a memory buffer to be
+    # read into the pvf system
+    buffer = BytesIO()
+    image.save(buffer, kind="PNG")
+
+    pvf_path = f"/pvf/{data}"
+    if not int(p.info_pvf(pvf_path, "exists")):
+        p.create_pvf(pvf_path, buffer.getvalue(), "")
+
+    page_height: float = p.get_option("pageheight", "") / 72
+
+    point = Point(point.x, page_height - point.y).as_pt()
+
+    # Load image from memory and place on page
+    p_image: int = p.load_image("png", pvf_path, "")
+    if p_image < 0:
+        return p_image
+
+    p.fit_image(p_image, point.x, point.y, "")
+    p.close_image(p_image)
 
     return 0

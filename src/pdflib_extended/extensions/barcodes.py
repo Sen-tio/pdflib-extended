@@ -155,7 +155,7 @@ def qr_code(
     size: int,
     box_size: int,
     border: int,
-):
+) -> int:
     qr = qrcode.main.QRCode(
         version=size,
         error_correction=qrcode.constants.ERROR_CORRECT_L,

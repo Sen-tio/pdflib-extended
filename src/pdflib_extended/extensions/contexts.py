@@ -132,7 +132,7 @@ class NewDocument(AbstractContextManager["NewDocument"]):
         self.page_count = 0
 
     def __enter__(self) -> Self:
-        result = self.p.begin_document(self.file_path.as_posix(), "")
+        result = self.p.begin_document(self.file_path.as_posix(), self.optlist)
         if result < 0:
             raise DocumentWriteException(self.p.get_errmsg())
         return self
